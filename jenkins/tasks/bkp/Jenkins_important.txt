@@ -1,0 +1,2 @@
+JENKINS_ARGS="-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
+  - name:

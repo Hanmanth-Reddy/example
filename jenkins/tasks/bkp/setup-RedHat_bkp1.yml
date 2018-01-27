@@ -1,0 +1,24 @@
+---
+  - name: Installing jenkins yum repo
+    yum_repository:
+          name: jenkins
+          description: jenkins repo
+          baseurl: https://pkg.jenkins.io/redhat/jenkins.repo
+          reposdir: /etc/yum.repos.d
+          file: jenkins
+          state: present
+          enabled: yes
+          gpgcheck: yes
+          gpgkey: https://pkg.jenkins.io/redhat/jenkins.io.key
+
+#  - name: importing keys
+#    rpm_key:
+#        key: https://pkg.jenkins.io/redhat/jenkins.io.key
+#        state: present
+
+
+  - name: installing jenkins server
+    yum:
+       name: jenkins-{{jenkins_version_redhat}}
+       state: present
+    notify: start jenkins

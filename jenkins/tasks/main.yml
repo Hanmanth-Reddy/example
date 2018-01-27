@@ -1,0 +1,82 @@
+---
+
+############jenkins rpm installtion from jenkins repo over inertnet
+
+# - name: Installing Jenkins
+#   yum:
+#     name: https://pkg.jenkins.io/redhat-stable/jenkins-{{jenkins_version_redhat}}.noarch.rpm
+#     state: present
+
+##############################Using Jenkins pkg repo##########################################################################
+
+#    - name: Installing jenkins yum repo
+#      get_url:
+#          url: https://pkg.jenkins.io/redhat/jenkins.repo
+#          dest: /etc/yum.repos.d/
+#
+#    - name: Importing gpg key
+#      rpm_key:
+#         state: present
+#         key: https://pkg.jenkins.io/redhat/jenkins.io.key
+#         validate_certs: no
+#
+#    - name: installing jenkins server
+#      yum:
+#        name: jenkins-{{jenkins_version_redhat}}
+#        state: present
+#
+
+###############################using jenkins pkg repo by yum_repository module #############################################
+
+#    - name: Installing jenkins yum repo
+#      yum_repository:
+#           name: jenkins
+#           description: jenkins repo
+#           baseurl: https://pkg.jenkins.io/redhat/jenkins.repo
+#           reposdir: /etc/yum.repos.d
+#           file: jenkins
+#           state: present
+#           enabled: yes
+#           gpgcheck: yes
+#           gpgkey: https://pkg.jenkins.io/redhat/jenkins.io.key
+
+####################### Standard downloaded jenkins rpm installtion from currrnt role files ##############################################
+- name: Copying jenkins rpm file
+  copy:
+    src: "{{rpm_pkg}}"
+    dest: "/tmp"
+# - yum:
+#    name: file:///tmp/{{rpm_pkg}}
+
+- command: "rpm -ivh /tmp/{{rpm_pkg}}"
+
+###################################### Skip jenkins setup wizard #############################################################################
+
+
+- lineinfile:
+        dest=/etc/sysconfig/jenkins
+        regexp=^JENKINS_JAVA_OPTIONS=
+        line=JENKINS_JAVA_OPTIONS="{{jenkins_java_options}}"
+  notify: start jenkins
+
+
+- get_url:
+     src: http://localhost:8080/jnlpJars/jenkins-cli.jar
+     dest: "{{jenkins_home}}"
+  register: jenkins_cli
+  until: "'OK' in jenkins_cli.msg or 'file already exists' in jenkins_cli.msg"
+  retries: 10
+  delay: 10
+
+#- name: Loggin into jenkins
+#  shell: java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080/ groovy /var/lib/jenkins/init.groovy.d/basic-security.groovy --username admin --password-file /var/lib/jenkins/secrets/initialAdminPassword
+
+
+##################################### Install recomanded plugins  ############################################################################
+
+- include_tasks: plugins.yml
+
+################################## Install sample Jenkins Jobs creation  #####################################################################
+# - inluce_tasks: sample-jobs.yml
+
+################################## Install sample user accounts ##################################################################################################
