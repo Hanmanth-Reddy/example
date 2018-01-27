@@ -1,0 +1,7 @@
+---
+ # defaults file for jenkins
+ jenkins_version_redhat: 2.89.3-1.1
+ rpm_pkg: jenkins-2.89.3-1.1.noarch.rpm
+ jenkins_java_options: "-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
+ jenkins_home: /var/lib/jenkins
+ jenkins_port: 8080

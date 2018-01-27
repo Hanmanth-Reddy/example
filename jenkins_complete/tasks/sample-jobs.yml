@@ -1,0 +1,14 @@
+---
+ tasks:
+    - name: display token
+      shell: "cat /var/lib/jenkins/secrets/initialAdminPassword"
+      register: result
+
+    - name: jobs
+      jenkins_job:
+              name: Demo
+              state: present
+              user: admin
+              token: register.result[0]
+              enabled: False
+              url: http://localhost:8080
