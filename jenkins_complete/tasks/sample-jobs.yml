@@ -1,5 +1,20 @@
 ---
+- name: Create new jobs or update existing jobs if there is any change
+  copy: scr="files/*.xml"  dest="/tmp"
+  script: "files/sample-jobs.sh"
 
+
+
+###### Creating jobs though jenkins_job module, In this way authentication is required ############
+
+# - name: installing dependencies
+#   yum:
+#     name: {{item}}
+#     state: present
+#   with_items:
+#         - python-jenkins
+#         - lxml
+#
 # - name: display token
 #   shell: "cat /var/lib/jenkins/secrets/initialAdminPassword"
 #   register: result
@@ -8,7 +23,9 @@
 #   jenkins_job:
 #           name: Demo
 #           state: present
+#           config: "{{ lookup('file', 'templates/test.xml') }}"
+########### enabled: False  (mutually exclusive with config attribute)
 #           user: admin
 #           token: register.result[0]
-#           enabled: False
 #           url: http://localhost:8080
+#

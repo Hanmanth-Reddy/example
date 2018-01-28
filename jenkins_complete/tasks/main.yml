@@ -3,18 +3,18 @@
 ############jenkins rpm installtion from jenkins repo over inertnet
 
 - name: Installing Jenkins
- yum:
-   name: https://pkg.jenkins.io/redhat-stable/jenkins-{{jenkins_version_redhat}}.noarch.rpm
-   state: present
+  yum:
+    name: https://pkg.jenkins.io/redhat-stable/jenkins-{{jenkins_version_redhat}}.noarch.rpm
+    state: present
 
 ##############################Using Jenkins pkg repo##########################################################################
-
-#- name: Installing jenkins yum repo
+#
+# - name: Installing jenkins yum repo
 #  get_url:
 #      url: https://pkg.jenkins.io/redhat/jenkins.repo
 #      dest: /etc/yum.repos.d/
-
-#- name: Importing gpg key
+#
+# - name: Importing gpg key
 #  rpm_key:
 #     state: present
 #     key: https://pkg.jenkins.io/redhat/jenkins.io.key
@@ -25,54 +25,58 @@
 #        name: jenkins-{{jenkins_version_redhat}}
 #        state: present
 #
-
+#
 ###############################using jenkins pkg repo by yum_repository module #############################################
-
-#- name: Importing gpg key
+#
+# - name: Importing gpg key
 #  rpm_key:
 #     state: present
 #     key: https://pkg.jenkins.io/redhat/jenkins.io.key
 #    validate_certs: no
-
-#- name: Installing jenkins yum repo
+#
+# - name: Installing jenkins yum repo
 #  yum_repository:
 #           name: jenkins
 #           description: jenkins repo
 #           baseurl: https://pkg.jenkins.io/redhat/jenkins.repo
 #           reposdir: /etc/yum.repos.d
-#          file: jenkins
+#           file: jenkins.repo
 #           state: present
 #           enabled: yes
 #
-
-#- name: installing jenkins server
+#
+# - name: installing jenkins server
 #  yum:
 #    name: jenkins-{{jenkins_version_redhat}}
 #    state: present
-
+#
 ####################### Standard downloaded jenkins rpm installtion from currrnt role files ##############################################
-#- name: Copying jenkins rpm file
+# - name: Copying jenkins rpm file
 #  copy:
 #    src: "{{rpm_pkg}}"
 #    dest: "/tmp"
-# - yum:
-#    name: file:///tmp/{{rpm_pkg}}
-
-#- command: "rpm -ivh /tmp/{{rpm_pkg}}"
-
+# #- yum:
+# #   name: file:///tmp/{{rpm_pkg}}
+#
+# - command: "rpm -ivh /tmp/{{rpm_pkg}}"
+#
 ###################################### Skip jenkins setup wizard #############################################################################
 
 - lineinfile:
         dest=/etc/sysconfig/jenkins
         regexp=^JENKINS_JAVA_OPTIONS=
         line=JENKINS_JAVA_OPTIONS="{{jenkins_java_options}}"
+  notify: start jenkins
 
 - name: starting service
   service: name=jenkins state=started
 
+####################################### wait for the jenkins service up and running ####################
 - wait_for:
+      host: localhost
       port: 8080
       delay: 10
+
 
 - shell: " wget -O {{jenkins_home}}/jenkins-cli.jar  http://localhost:8080/jnlpJars/jenkins-cli.jar "
 

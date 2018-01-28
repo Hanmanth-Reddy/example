@@ -7,18 +7,10 @@
     mode: 0755
     state: directory
     recurse: yes
-
-- name: set permissions for default.json
-  file:
-    path: "{{jenkins_home}}/updates/default.json"
-    owner: jenkins
-    group: jenkins
-    mode: 0755
-
 - name: install plugins
   command: >
-    java -jar /{{ jenkins_home }}/jenkins-cli.jar -s http://localhost:{{jenkins_port}}/  install-plugin {{ item }}
-    creates={{ jenkins_home }}/plugins/{{ item }}.jpi
+        creates={{ jenkins_home }}/plugins/{{ item }}.jpi
+        java -jar /{{ jenkins_home }}/jenkins-cli.jar -s http://localhost:{{jenkins_port}}/  install-plugin {{ item }}
   with_items: "{{ my_jenkins_plugins }}"
 
 ################################## using jenkins_pluin moduel#########################################################
