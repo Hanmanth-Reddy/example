@@ -1,4 +1,3 @@
-<?xml version='1.0' encoding='UTF-8'?>
 <project>
   <description>Basic sample free style job. The job will print &quot;Hello...&quot; on console.</description>
   <keepDependencies>false</keepDependencies>
