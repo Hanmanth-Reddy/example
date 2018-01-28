@@ -1,7 +1,7 @@
 ---
 - name: Create new jobs or update existing jobs if there is any change
   copy: scr="files/*.xml"  dest="/tmp"
-  script: "files/sample-jobs.sh"
+  script: "files/sample-jobs.sh sample_job1  sample_job2"
 
 
 

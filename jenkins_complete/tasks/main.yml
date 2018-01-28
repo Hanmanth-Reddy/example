@@ -61,15 +61,14 @@
 # - command: "rpm -ivh /tmp/{{rpm_pkg}}"
 #
 ###################################### Skip jenkins setup wizard #############################################################################
+- service: name=jenkins state=started
 
 - lineinfile:
         dest=/etc/sysconfig/jenkins
         regexp=^JENKINS_JAVA_OPTIONS=
         line=JENKINS_JAVA_OPTIONS="{{jenkins_java_options}}"
-  notify: start jenkins
+  notify: restart jenkins
 
-- name: starting service
-  service: name=jenkins state=started
 
 ####################################### wait for the jenkins service up and running ####################
 - wait_for:
