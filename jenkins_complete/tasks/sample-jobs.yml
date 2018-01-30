@@ -1,7 +1,17 @@
 ---
+
 - name: Create new jobs or update existing jobs if there is any change
-  copy: scr="files/*.xml"  dest="/tmp"
-  script: "files/sample-jobs.sh sample_job1  sample_job2"
+  copy: 
+    scr: "files/{{item}}"
+    dest: "/tmp/{{item}}"
+  with_items:
+     - sample-job1_config.xml
+     - sample-job2_config.xml
+  tags: jobs
+
+
+
+ # script: "sample-jobs.sh sample_job1  sample_job2"
 
 
 

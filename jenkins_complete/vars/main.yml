@@ -3,7 +3,6 @@
             ant: enabled
             git: enabled
             ace-editor: enabled
-            ant: enabled
             apache-httpcomponents-client-4-api: enabled
             authentication-tokens: enabled
             bouncycastle-api: enabled
@@ -19,7 +18,6 @@
             docker-workflow: enabled
             durable-task: enabled
             email-ext: enabled
-            git: enabled
             git-client: enabled
             github: enabled
             github-api: enabled
