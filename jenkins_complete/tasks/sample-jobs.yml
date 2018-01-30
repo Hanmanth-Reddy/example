@@ -8,8 +8,9 @@
      - sample-job1_config.xml
      - sample-job2_config.xml
   tags: jobs
-
-
+ 
+- name: importing sample jobs
+  shell: "/tmp/jenkins_jobs.sh sample_job1 sample_job2"
 
  # script: "sample-jobs.sh sample_job1  sample_job2"
 
