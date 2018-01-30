@@ -73,7 +73,7 @@
 ####################################### wait for the jenkins service up and running ####################
 - wait_for:
       host: localhost
-      port: 8080
+      port: {{jenkins_port}}
       delay: 10
 
 
