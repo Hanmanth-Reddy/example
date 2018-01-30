@@ -1,18 +1,17 @@
 ---
 
 - name: Create new jobs or update existing jobs if there is any change
-  copy: 
-    scr: "files/{{item}}"
+  template:
+    scr: "{{item}}"
     dest: "/tmp/{{item}}"
   with_items:
      - sample-job1_config.xml
      - sample-job2_config.xml
-  tags: jobs
- 
-- name: importing sample jobs
-  shell: "/tmp/jenkins_jobs.sh sample_job1 sample_job2"
+     - jenkins_jobs.sh
 
- # script: "sample-jobs.sh sample_job1  sample_job2"
+- shell: "sh /tmp/jenkins_jobs.sh sample-job1 sample-job2"
+
+ # script: "files/sample-jobs.sh sample_job1  sample_job2"
 
 
 
@@ -37,6 +36,6 @@
 #           config: "{{ lookup('file', 'templates/test.xml') }}"
 ########### enabled: False  (mutually exclusive with config attribute)
 #           user: admin
-#           token: register.result[0]
+#           token: #####
 #           url: http://localhost:8080
 #

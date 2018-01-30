@@ -1,41 +1,24 @@
 ---
-- name: plugings
-  jenkins_plugin:
-          owner: jenkins
-          group: jenkins
-          jenkins_home: {{jenkins_home}}
-          mode: 0664
-          updates_url: https://updates.jenkins-ci.org
-          name: "{{item.key}}"
-          state: "{{ 'enabled' if item.value['enabled'] else 'disabled'}}"
-  when: >
-    'enabled' in item.value
-  with_dict: "{{ my_jenkins_plugins }}"
+- name: create jenkins update directory
+  file:
+    path: "{{jenkins_home}}/updates"
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+    state: directory
+    recurse: yes
+- name: install plugins
+  command: >
+        creates={{ jenkins_home }}/plugins/{{ item }}.jpi
+        java -jar /{{ jenkins_home }}/jenkins-cli.jar -s http://localhost:{{jenkins_port}}/  install-plugin {{ item }}
+  with_items: "{{ my_jenkins_plugins }}"
 
-###########################################################################################33
+################################## using jenkins_pluin moduel#########################################################
 
-# - name: create jenkins update directory
-#   file:
-#     path: "{{jenkins_home}}/updates"
-#     owner: jenkins
-#     group: jenkins
-#     mode: 0755
-#     state: directory
-#     recurse: yes
-#
-# - name: put update-center.json
-#   shell: curl -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' > /{{jenkins_home}}/updates/default.json
-#   args:
-#     creates: "/{{ jenkins_home }}/updates/default.json"
-#
-# - name: set permissions for default.json
-#   file:
-#     path: "/var/lib/jenkins/updates/default.json"
-#     owner: jenkins
-#     group: jenkins
-#     mode: 0755
-#
-# - name: install plugins
-#   command: >
-#     java -jar /{{ jenkins_home }}/jenkins-cli.jar -s http://localhost:{{ jenkins_port }}/  install-plugin {{ 'item.key' if item.value['enabled'] else ''}}  creates={{ jenkins_home }}/plugins/{{ 'item.key' if item.value['enabled'] else ''}}.jpi
-#   with_items: "{{ jenkins_plugins }}"
+#- name: plugings
+#  jenkins_plugin:
+#          name: "{{item.key}}"
+#          state: "{{ 'enabled' if item.value['enabled'] else 'disabled'}}"
+#  when: >
+#    'enabled' in item.value
+#  with_dict: "{{ my_jenkins_plugins }}"
