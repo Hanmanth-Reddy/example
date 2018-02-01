@@ -2,7 +2,6 @@
 - hosts: localhost
   become: yes
   become_method: sudo
-  remote_user: root
   vars:
     my_jenkins_params:
        url_username: admin
@@ -14,13 +13,9 @@
       jenkins_plugin:
          name: git
          state: latest
-        
          params: "{{ my_jenkins_params }}"
-
          url_password: admin
-         update_url: https://updates.jenkins-ci.org
-        # url_user: admin
-        # url_password: admin
+       #  update_url: https://updates.jenkins-ci.org
          url: http://localhost:8080
 
 #c9a911cbf10f9dde136a4b71e0c7fbb1
